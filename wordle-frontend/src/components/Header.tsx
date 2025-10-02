@@ -1,5 +1,8 @@
+type HeaderProps = {
+  onShowRegister: ()=>void,
+}
 
-export default function Header(){
+export default function Header({onShowRegister}:HeaderProps){
   return(
     <header className="header">
       <ul className="wordlist">
@@ -10,7 +13,10 @@ export default function Header(){
         <li className="header-element">l</li>
         <li className="header-element">e</li>
       </ul>
-      
+      <div className="buttons">
+        <button onClick={onShowRegister}>Register</button>
+        <button>Log in</button>
+      </div>     
     </header>
   )
 }

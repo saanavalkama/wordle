@@ -8,6 +8,7 @@ export type Action =
   | {type:'rematch'}
   | {type:'submitWord',payload:string}
   | {type:'lost'}
+  | {type: 'register'}
 
 export interface State {
     rightWord: string;
@@ -45,6 +46,8 @@ export function reducer(state : State, action : Action){
         return {...state, guesses: [...state.guesses,action.payload], guess:''}
       case "lost":
         return {...state, status:'lost'}
+      case "register":
+        return {...state,status:'register'}
       default:
         throw new Error('Unknown action')
     }

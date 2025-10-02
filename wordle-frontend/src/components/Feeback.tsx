@@ -34,9 +34,9 @@ const d : Record<string, LetterStatus> = {}
 
   return(
     <div className="keyboard">
-      <ul className="guess-list">{ROW_ONE.map(ele => <Letter letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
-      <ul className="guess-list">{ROW_TWO.map(ele => <Letter letter={ele} status={d[ele] ?? 'not-guessed' }/>)}</ul>
-      <ul className="guess-list">{ROW_THREE.map(ele => <Letter letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
+      <ul className="guess-list">{ROW_ONE.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
+      <ul className="guess-list">{ROW_TWO.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed' }/>)}</ul>
+      <ul className="guess-list">{ROW_THREE.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
     </div>
   )
 }

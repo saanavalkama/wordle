@@ -13,10 +13,15 @@ import Header from "./components/Header"
 import Feedback from "./components/Feeback"
 import WinScreen from "./components/WinScreen"
 import LostScreen from "./components/LossScreen"
+import Register from "./components/Register"
 
 export default function App(){
 
-  const [state, dispatch] = useReducer(reducer, initialState )
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  function onShowRegister(){
+    dispatch({type:'register'})
+  }
 
   
   const {rightWord, guess, status, guesses} = state 
@@ -48,9 +53,9 @@ export default function App(){
 
   return(
     <div className="app">
-      <Header />
-      {status === 'loading' && 
-        <div className="screen">
+      <Header onShowRegister={onShowRegister}/>
+      {status === 'register' && <Register />}
+      {status === 'loading' && <div className="screen">
           <div className="loader"></div>
         </div>}
       {status === 'error' && <p>{error}</p>}

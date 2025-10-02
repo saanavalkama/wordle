@@ -1,6 +1,11 @@
 import express from "express"
 import dotenv from "dotenv"
 import cors from 'cors'
+import mongoose from "mongoose"
+
+//routes
+import wordRoutes from "./routes/word.js"
+import authRoutes from "./routes/auth.js"
 
 dotenv.config()
 
@@ -8,6 +13,11 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
+
+mongoose
+  .connect(process.env.mongoDB)
+  .then(()=>console.log("MongoDB connected"))
+  .catch(err => console.log(err))
 
 const fallbackWords = [
   "about", "other", "which", "their", "there", "first", "would", "these", "click", "price",
@@ -23,27 +33,16 @@ const fallbackWords = [
   "heart", "ideal", "knife", "laugh", "magic", "novel", "pride", "quick", "relax", "share"
 ];
 
-app.get("/api/word",async (req,res)=>{
-    try{
-      const response = await fetch("https://random-words-api.kushcreates.com/api?language=en&category=wordle&length=5&words=1")
-      if(!response.ok){
-        throw new Error("failed to fetch")
-      }
-      const data = await response.json() 
-      const word = data[0].word  
-      res.json({word})   
-      
-    } catch (err){
-      console.error(err)
-      const fallback = fallbackWords[Math.floor(Math.random() * fallbackWords.length)]
-      res.json({word: fallback})
-    }
-})
+
+app.use("/api/word", wordRoutes);
+app.use("/api/auth",authRoutes)
+
 
 const PORT = process.env.PORT || 5000
 
 app.listen(PORT, ()=>{
     console.log(`Server running on port:${PORT}`)
 })
+
 
 
