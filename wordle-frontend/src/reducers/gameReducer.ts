@@ -1,39 +1,40 @@
+/* eslint-disable no-case-declarations */
 export type Action = 
   | {type: 'setWord', payload: string}
-  | {type:'error'}
-  | {type:'loading'}
   | {type:'startClick'}
   | {type:'inputFieldChange', payload: string}
   | {type: 'win'}
   | {type:'rematch'}
   | {type:'submitWord',payload:string}
   | {type:'lost'}
-  | {type: 'register'}
+
+
+export type GameStatus = 
+  | 'idle'
+  | 'active'
+  | 'win'
+  | 'lost'
 
 export interface State {
     rightWord: string;
     guess: string;
-    status: string; 
+    status: GameStatus; 
     guesses: string[]
   }
 
 
-export const initialState : State = {
+export const initialGameState : State = {
   rightWord:'',
   guess:'',
-  //statuses: start, error, loading, active, win, lost
+  //statuses: idle, active, win, lost,
   status:'idle',
   guesses:[]
 }
 
-export function reducer(state : State, action : Action){
+export function gameReducer(state : State, action : Action):State{
     switch (action.type){
       case 'setWord':
-        return {...state, status:'start', rightWord: action.payload}
-      case 'error':
-        return {...state,status:'error'}
-      case 'loading':
-        return {...state, status:'loading'}
+        return {...state, status:'idle', rightWord: action.payload}
       case 'startClick':
         return {...state, status:'active',guess:'',guesses:[]}
       case 'inputFieldChange':
@@ -41,13 +42,14 @@ export function reducer(state : State, action : Action){
       case 'win':
         return {...state, status: 'win'}
       case 'rematch':
-        return {...state, staus:'start'}
+        return initialGameState
       case 'submitWord':
-        return {...state, guesses: [...state.guesses,action.payload], guess:''}
+        const newGuesses = [...state.guesses, action.payload]
+        const hasWon =  state.rightWord === action.payload
+        const hasLost = !hasWon && newGuesses.length >= 6
+        return {...state, guesses: newGuesses, guess:'', status: hasWon ? 'win' : hasLost ? 'lost' : 'active'}
       case "lost":
         return {...state, status:'lost'}
-      case "register":
-        return {...state,status:'register'}
       default:
         throw new Error('Unknown action')
     }

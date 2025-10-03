@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
   avatarUrl: { type: String },
   stats: {
     gamesPlayed: { type: Number, default: 0 },
+    totalScore:{type:Number},
     wins: { type: Number, default: 0 },
     currentStreak: { type: Number, default: 0 },
     totalGuesses: { type: Number, default: 0 },

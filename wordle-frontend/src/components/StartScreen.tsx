@@ -1,14 +1,13 @@
-import type { Action } from "../reducer";
+import type { Action } from "../reducers/gameReducer";
 
 type StartScreenProps = {
   dispatch: React.Dispatch<Action>,
-  status: string,
   isLoading: boolean,
-  error: string
+  error: string,
+  rightWord: string  
+}
 
-};
-
-export default function StartScreen({dispatch, status}:StartScreenProps){
+export default function StartScreen({dispatch, error, rightWord, isLoading}:StartScreenProps){
 
   const startClick = function(){
     dispatch({type:'startClick'})
@@ -17,7 +16,16 @@ export default function StartScreen({dispatch, status}:StartScreenProps){
   return(
     <div className="screen">
       <h2>Start new game</h2>
-      {status === 'start' && (
+      {isLoading &&
+        <div className="screen">
+          <div className="loader"></div>
+        </div> 
+      } 
+      {error &&
+      <div className="error-div">
+        <p>{error}</p>  
+      </div>}
+      {rightWord &&  (
         <button
           onClick={startClick}
         >Start Game
