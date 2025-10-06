@@ -6,6 +6,7 @@ import mongoose from "mongoose"
 //routes
 import wordRoutes from "./routes/word.js"
 import authRoutes from "./routes/auth.js"
+import statRoutes from "./routes/stats.js"
 
 dotenv.config()
 
@@ -19,23 +20,10 @@ mongoose
   .then(()=>console.log("MongoDB connected"))
   .catch(err => console.log(err))
 
-const fallbackWords = [
-  "about", "other", "which", "their", "there", "first", "would", "these", "click", "price",
-  "state", "after", "world", "music", "where", "books", "links", "years", "order", "items",
-  "group", "under", "games", "could", "great", "hotel", "store", "terms", "right", "local",
-  "those", "using", "phone", "forum", "based", "black", "check", "index", "being", "women",
-  "today", "south", "pages", "found", "house", "photo", "power", "while", "three", "total",
-  "place", "think", "north", "posts", "media", "since", "guide", "board", "white", "small",
-  "times", "sites", "level", "hours", "image", "title", "shall", "class", "still", "money",
-  "every", "visit", "tools", "reply", "value", "press", "learn", "print", "stock", "point",
-  "sales", "large", "table", "start", "model", "human", "movie", "march", "never", "users",
-  "topic", "below", "field", "plant", "angle", "boost", "charm", "drive", "equal", "fancy",
-  "heart", "ideal", "knife", "laugh", "magic", "novel", "pride", "quick", "relax", "share"
-];
-
 
 app.use("/api/word", wordRoutes);
 app.use("/api/auth",authRoutes)
+app.use("/api/stats",statRoutes)
 
 
 const PORT = process.env.PORT || 5000

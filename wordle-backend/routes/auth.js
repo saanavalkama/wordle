@@ -63,7 +63,8 @@ router.post("/login", async(req,res)=>{
       message:'login succesfull',
       token,
       username: user.username,
-      avatarUrl: user.avatarUrl
+      avatarUrl: user.avatarUrl,
+      id: user._id
     })
 
   } catch (err){

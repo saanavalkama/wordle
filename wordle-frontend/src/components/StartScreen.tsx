@@ -1,16 +1,28 @@
-import type { Action } from "../reducers/gameReducer";
+import { useState } from "react";
+import type { Action} from "../reducers/gameReducer";
+import { fetchWord } from "../services/fetchWord";
 
 type StartScreenProps = {
   dispatch: React.Dispatch<Action>,
-  isLoading: boolean,
-  error: string,
-  rightWord: string  
 }
 
-export default function StartScreen({dispatch, error, rightWord, isLoading}:StartScreenProps){
+export default function StartScreen({dispatch}:StartScreenProps){
 
-  const startClick = function(){
-    dispatch({type:'startClick'})
+
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const startClick = async function(){
+    setError('')
+    setIsLoading(true)
+    try{
+      const word = await fetchWord()
+      dispatch({type:'startClick', payload:word})
+    } catch (err){
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    } 
   }
 
   return(
@@ -24,13 +36,12 @@ export default function StartScreen({dispatch, error, rightWord, isLoading}:Star
       {error &&
       <div className="error-div">
         <p>{error}</p>  
-      </div>}
-      {rightWord &&  (
-        <button
+      </div>
+      }
+      <button
           onClick={startClick}
         >Start Game
        </button>
-      )}
     </div>
   )
 }

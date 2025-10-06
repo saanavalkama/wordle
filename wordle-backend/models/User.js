@@ -6,13 +6,13 @@ const UserSchema = new mongoose.Schema({
   avatarUrl: { type: String },
   stats: {
     gamesPlayed: { type: Number, default: 0 },
-    totalScore:{type:Number},
+    totalScore:{type:Number, default:0},
     wins: { type: Number, default: 0 },
     currentStreak: { type: Number, default: 0 },
     totalGuesses: { type: Number, default: 0 },
     avgGuesses: { type: Number, default: 0 },
     lastPlayed: { type: Date, default: null },
-    fastestWin: { type: Number, default: 0 },
+    fastestWin: { type: Number, default: 7 },
   },
 
   createdAt: { type: Date, default: Date.now }

@@ -3,7 +3,8 @@ import axios from "axios"
 type LoginResponse = {
     token: string,
     username: string,
-    avatarUrl: string
+    avatarUrl: string,
+    id: string
 }
 
 export async function login(username: string, password:string):Promise<LoginResponse>{
@@ -13,8 +14,8 @@ export async function login(username: string, password:string):Promise<LoginResp
         password
       })
       console.log(res)
-      const {token, username: returnedUsername, avatarUrl} = res.data
-      return {token, username: returnedUsername, avatarUrl}
+      const {token, username: returnedUsername, avatarUrl,id} = res.data
+      return {token, username: returnedUsername, avatarUrl, id}
       
  
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

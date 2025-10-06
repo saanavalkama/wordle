@@ -1,5 +1,4 @@
 import { useEffect, useReducer, useState} from "react"
-import {useWord} from "./hooks/useWord2"
 import { initialGameState, gameReducer } from "./reducers/gameReducer"
 import { initialAuthState, authReducer } from "./reducers/authReducer"
 
@@ -17,7 +16,12 @@ import LostScreen from "./components/LossScreen"
 import LoginForm from "./components/Login"
 import Register from "./components/Register"
 
+
+
+
 export type Screen = "login" | "register" | "game" | "stats";
+
+
 
 export default function App(){
 
@@ -35,15 +39,20 @@ export default function App(){
 
   function onLogOut(){
     dispatchAuth({type:'LOGOUT'})
+    localStorage.removeItem("user")
   }
+
 
   
   const {rightWord, guess, status, guesses} = gameState
-  const {isLoggedIn, user} = authState
-  const {word, isLoading, error ,refetch} = useWord()
+  const {isLoggedIn, user, token} = authState
+  
 
+ 
+  
   console.log(gameState)
   console.log(authState)
+
 
   useEffect(()=>{
     const user = localStorage.getItem('user')
@@ -54,19 +63,26 @@ export default function App(){
       }
     }
   },[])
+
+  useEffect(()=>{
+      const game = localStorage.getItem('currentGameState')
+      if(game){
+        const gameObj = JSON.parse(game)
+        console.log(gameObj)
+        dispatchGame({type:'GET_FROM_LOCALSTORAGE', payload: gameObj})
+      }
+  },[])
+
+  useEffect(()=>{
+    localStorage.setItem('currentGameState',JSON.stringify(gameState))
+  },[gameState])
   
   function onNewGame(){
-    refetch()
     dispatchGame({type:'rematch'})
   }
   
-  useEffect(()=>{
-      if(word){
-        dispatchGame({type: 'setWord', payload: word})
-      }
-    },[word])
 
-  const nEmptyFields = 6 - guesses.length
+  const nEmptyFields = 5 - guesses.length
 
 
   return(
@@ -80,10 +96,19 @@ export default function App(){
       />
       {screen === 'register' && <Register />}
       {screen === 'login' && <LoginForm dispatch={dispatchAuth} setScreen={setScreen}/>}
-      {screen === 'game' &&
+      {screen === 'game' && isLoggedIn &&
       <Game>
-        {status === 'idle' && <StartScreen dispatch={dispatchGame} isLoading={isLoading} error={error}  rightWord={rightWord} />}
-        {status === 'win' && <WinScreen onNewGame={onNewGame} rightWord={rightWord} />}
+        {status === 'idle' && 
+          <StartScreen 
+            dispatch={dispatchGame}  
+            />}
+        {status === 'win' && 
+          <WinScreen 
+            onNewGame={onNewGame} 
+            rightWord={rightWord}
+            user={user}
+            guesses={guesses} 
+          />}
         {status === 'lost' && <LostScreen onNewGame={onNewGame} rightWord={rightWord}/>}
         {status === 'active' &&
         <>

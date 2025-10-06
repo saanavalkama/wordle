@@ -1,12 +1,12 @@
 /* eslint-disable no-case-declarations */
 export type Action = 
-  | {type: 'setWord', payload: string}
-  | {type:'startClick'}
+  | {type:'startClick',payload:string}
   | {type:'inputFieldChange', payload: string}
   | {type: 'win'}
   | {type:'rematch'}
   | {type:'submitWord',payload:string}
   | {type:'lost'}
+  | {type: 'GET_FROM_LOCALSTORAGE', payload: GameState }
 
 
 export type GameStatus = 
@@ -15,7 +15,7 @@ export type GameStatus =
   | 'win'
   | 'lost'
 
-export interface State {
+export interface GameState {
     rightWord: string;
     guess: string;
     status: GameStatus; 
@@ -23,7 +23,7 @@ export interface State {
   }
 
 
-export const initialGameState : State = {
+export const initialGameState : GameState = {
   rightWord:'',
   guess:'',
   //statuses: idle, active, win, lost,
@@ -31,12 +31,10 @@ export const initialGameState : State = {
   guesses:[]
 }
 
-export function gameReducer(state : State, action : Action):State{
+export function gameReducer(state : GameState, action : Action):GameState{
     switch (action.type){
-      case 'setWord':
-        return {...state, status:'idle', rightWord: action.payload}
       case 'startClick':
-        return {...state, status:'active',guess:'',guesses:[]}
+        return {...state, status:'active',guess:'',guesses:[],rightWord:action.payload}
       case 'inputFieldChange':
         return {...state, guess: action.payload}
       case 'win':
@@ -50,6 +48,8 @@ export function gameReducer(state : State, action : Action):State{
         return {...state, guesses: newGuesses, guess:'', status: hasWon ? 'win' : hasLost ? 'lost' : 'active'}
       case "lost":
         return {...state, status:'lost'}
+      case "GET_FROM_LOCALSTORAGE":
+        return action.payload 
       default:
         throw new Error('Unknown action')
     }

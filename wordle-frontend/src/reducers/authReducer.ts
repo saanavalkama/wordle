@@ -9,7 +9,7 @@ export type User = {
     token: string,
     username: string,
     avatarUrl: string,
-    stats?: string[]
+    id: string
 }
 
 export interface State {
@@ -21,7 +21,8 @@ export interface State {
 export const initialAuthState = {
     isLoggedIn: false,
     user: null,
-    token: null
+    token: null,
+    id: null
 }
 
 export function authReducer(state:State, action: Action){
