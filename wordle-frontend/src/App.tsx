@@ -28,6 +28,8 @@ export default function App(){
   const [gameState, dispatchGame] = useReducer(gameReducer, initialGameState)
   const [authState, dispatchAuth] = useReducer(authReducer, initialAuthState) 
   const [screen, setScreen] = useState<Screen>('game')
+  const [hydration, setHydration] = useState(false)
+
 
   function showRegister(){
     setScreen('register')
@@ -62,20 +64,21 @@ export default function App(){
         dispatchAuth({type:'SET_FROM_LOCALSTORAGE', payload: userObj})
       }
     }
-  },[])
-
-  useEffect(()=>{
       const game = localStorage.getItem('currentGameState')
       if(game){
         const gameObj = JSON.parse(game)
         console.log(gameObj)
         dispatchGame({type:'GET_FROM_LOCALSTORAGE', payload: gameObj})
       }
+
+      setHydration(true)
   },[])
 
   useEffect(()=>{
-    localStorage.setItem('currentGameState',JSON.stringify(gameState))
-  },[gameState])
+    if(hydration){
+      localStorage.setItem('currentGameState',JSON.stringify(gameState))
+    }
+  },[gameState, hydration])
   
   function onNewGame(){
     dispatchGame({type:'rematch'})
@@ -83,6 +86,11 @@ export default function App(){
   
 
   const nEmptyFields = 5 - guesses.length
+
+  if(!hydration){
+    return <p>loading...</p>
+  }
+
 
 
   return(
@@ -98,7 +106,7 @@ export default function App(){
       {screen === 'login' && <LoginForm dispatch={dispatchAuth} setScreen={setScreen}/>}
       {screen === 'game' && isLoggedIn &&
       <Game>
-        {status === 'idle' && 
+        {status === 'idle' && guesses.length === 0 && !rightWord &&
           <StartScreen 
             dispatch={dispatchGame}  
             />}
