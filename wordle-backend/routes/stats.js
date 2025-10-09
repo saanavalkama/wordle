@@ -13,10 +13,11 @@ router.post("/",authorize, async (req,res)=>{
     console.log('score ' + score + 'type' + typeof score)
 
     
-    if(!won || !guesses || !score){
-      res.status(400).json({message: "missing information"})
+    if(won === undefined || guesses === null || score === null){
+     return res.status(400).json({message: "missing information"})
     }
     const user = req.user
+    console.log(user)
 
     /*stats: {
     gamesPlayed: { type: Number, default: 0 },
@@ -28,7 +29,6 @@ router.post("/",authorize, async (req,res)=>{
     lastPlayed: { type: Date, default: null },
     fastestWin: { type: Number, default: 0 },
   },*/ 
-
   const parsedScore = Number(score)
   const parsedGuesses = Number(guesses)
 

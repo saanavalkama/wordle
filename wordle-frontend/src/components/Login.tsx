@@ -1,19 +1,22 @@
 import React, { useState } from "react"
 import { login } from "../services/login"
 import type { Action } from "../reducers/authReducer"
-import type {Screen} from '../App'
+import { useNavigate } from "react-router-dom"
+import styles from '../styles/Login.module.css'
+
 
 type LoginFormProps = {
   dispatch: React.Dispatch<Action>
-  setScreen: React.Dispatch<React.SetStateAction<Screen>>
 }
 
-export default function LoginForm({dispatch, setScreen}:LoginFormProps){
+export default function LoginForm({dispatch}:LoginFormProps){
 
   const [username, setUsername] = useState('')
   const [pwd, setPwd] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const navigate = useNavigate()
 
   async function onSubmitLogin(e:React.FormEvent){
     e.preventDefault()
@@ -34,9 +37,9 @@ export default function LoginForm({dispatch, setScreen}:LoginFormProps){
         dispatch({type:'LOGIN_SUCCESS',payload: user})
         const userString = JSON.stringify(user)
         localStorage.setItem('user', userString)
-        setScreen('game')
         setUsername("")
         setPwd("")
+        navigate("/")
       } else {
         setError("Invalid credentials")
         dispatch({type:'LOGIN_ERROR'})
@@ -54,9 +57,9 @@ export default function LoginForm({dispatch, setScreen}:LoginFormProps){
   }
 
   return(
-    <div className="login">
+    <div className={styles.login}>
       {error && 
-        <div className="error-div">
+        <div className={styles.error}>
           <p>{error}</p>  
         </div>}
       {isLoading &&
@@ -65,24 +68,20 @@ export default function LoginForm({dispatch, setScreen}:LoginFormProps){
         </div> 
       }
       <h2>Log in</h2>
-      <form className="login-form" onSubmit={onSubmitLogin}>
-        <div>
-          <label>Username</label>
-          <input 
-            value={username}
-            onChange={(e)=>setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            value={pwd}
-            onChange={(e)=>setPwd(e.target.value)}
-            type="password"
-            required
-          />
-        </div>
+      <form className={styles.form} onSubmit={onSubmitLogin}>
+        <input 
+          value={username}
+          onChange={(e)=>setUsername(e.target.value)}
+          placeholder="Username"
+          required
+        />
+        <input
+          value={pwd}
+          onChange={(e)=>setPwd(e.target.value)}
+          type="password"
+          placeholder="password"
+          required
+        />
         <button>Submit</button>
       </form>
     </div>

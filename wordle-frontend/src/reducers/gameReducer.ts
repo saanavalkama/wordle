@@ -20,6 +20,8 @@ export interface GameState {
     guess: string;
     status: GameStatus; 
     guesses: string[]
+    activeRow: number
+    lastGuessedRow:number
   }
 
 
@@ -28,13 +30,23 @@ export const initialGameState : GameState = {
   guess:'',
   //statuses: idle, active, win, lost,
   status:'idle',
-  guesses:[]
+  guesses:[],
+  activeRow: 0,
+  lastGuessedRow: -1
 }
 
 export function gameReducer(state : GameState, action : Action):GameState{
     switch (action.type){
       case 'startClick':
-        return {...state, status:'active',guess:'',guesses:[],rightWord:action.payload}
+        return {
+          ...state, 
+          status:'active',
+          guess:'',
+          guesses:[],
+          rightWord:action.payload, 
+          activeRow:0,
+          lastGuessedRow:-1
+        }
       case 'inputFieldChange':
         return {...state, guess: action.payload}
       case 'win':
@@ -45,7 +57,8 @@ export function gameReducer(state : GameState, action : Action):GameState{
         const newGuesses = [...state.guesses, action.payload]
         const hasWon =  state.rightWord === action.payload
         const hasLost = !hasWon && newGuesses.length >= 6
-        return {...state, guesses: newGuesses, guess:'', status: hasWon ? 'win' : hasLost ? 'lost' : 'active'}
+        const nextRow = hasWon || hasLost ? state.activeRow : state.activeRow + 1
+        return {...state, guesses: newGuesses, guess:'', status: hasWon ? 'win' : hasLost ? 'lost' : 'active', activeRow: nextRow, lastGuessedRow: state.activeRow}
       case "lost":
         return {...state, status:'lost'}
       case "GET_FROM_LOCALSTORAGE":

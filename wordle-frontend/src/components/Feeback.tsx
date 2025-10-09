@@ -1,3 +1,5 @@
+import styles from '../styles/ActiveGameScreen.module.css'
+
 type FeedbackProps = {
   correctWord: string,
   guesses: string[]
@@ -33,10 +35,10 @@ const d : Record<string, LetterStatus> = {}
   const ROW_THREE: string[] = ["z", "x", "c", "v", "b", "n", "m"];
 
   return(
-    <div className="keyboard">
-      <ul className="guess-list">{ROW_ONE.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
-      <ul className="guess-list">{ROW_TWO.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed' }/>)}</ul>
-      <ul className="guess-list">{ROW_THREE.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
+    <div className={styles.keyboard}>
+      <ul className={styles.keyboardRow}>{ROW_ONE.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
+      <ul className={styles.keyboardRow}>{ROW_TWO.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed' }/>)}</ul>
+      <ul className={styles.keyboardRow}>{ROW_THREE.map(ele => <Letter key={ele} letter={ele} status={d[ele] ?? 'not-guessed'}/>)}</ul>
     </div>
   )
 }
@@ -48,6 +50,6 @@ type LetterProps = {
 
 function Letter({letter, status}:LetterProps){
     return(
-      <li className={status}>{letter}</li>
+      <li className={styles[status]}>{letter}</li>
     )
 }

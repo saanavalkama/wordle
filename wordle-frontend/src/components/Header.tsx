@@ -1,17 +1,17 @@
 import type { User } from "../reducers/authReducer"
+import { NavLink } from "react-router-dom"
+import styles from '../styles/Header.module.css'
 
 type HeaderProps = {
-  onShowRegister: ()=>void,
-  onShowLogIn: ()=>void,
   onLogOut: ()=>void,
   isLoggedIn:boolean,
   user: User | null
 }
 
-export default function Header({onShowRegister, onShowLogIn, onLogOut, user, isLoggedIn}:HeaderProps){
+export default function Header({onLogOut, user, isLoggedIn}:HeaderProps){
   return(
-    <header className="header">
-      {isLoggedIn && <div className="header-item">
+    <header className={styles.header}>
+      {isLoggedIn && <div className={styles.user}>
         <img src={user?.avatarUrl} />
         <div>
           <p>you are logged in:</p>
@@ -19,7 +19,10 @@ export default function Header({onShowRegister, onShowLogIn, onLogOut, user, isL
         </div>
       </div>
       }
-      <ul className="wordlist">
+      {!isLoggedIn && <NavLink to="/login">Login</NavLink> }
+      
+      <NavLink to="/">
+      <ul>
         <li className="header-element">W</li>
         <li className="header-element">o</li>
         <li className="header-element">r</li>
@@ -27,14 +30,14 @@ export default function Header({onShowRegister, onShowLogIn, onLogOut, user, isL
         <li className="header-element">l</li>
         <li className="header-element">e</li>
       </ul>
+      </NavLink>
       {isLoggedIn ?
-       <div className="buttons">
-        <button>Stats</button>
+       <div className={styles.links}>
+        <NavLink to='/stats'>Stats</NavLink>
         <button onClick={onLogOut}>Log out</button>
        </div> : 
-      <div className="buttons">
-        <button onClick={onShowRegister}>Register</button>
-        <button onClick={onShowLogIn}>Log in</button>
+      <div className={styles.links}>
+        <NavLink to="/register">Register</NavLink>
       </div>}
     </header>
   )

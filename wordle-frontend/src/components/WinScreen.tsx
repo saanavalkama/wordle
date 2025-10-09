@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react"
-import { sendStats } from "../services/sendStats"
+import { useSendAndGetStats } from "../hooks/useSendAndGetStats"
 import type { User } from "../reducers/authReducer"
+import styles from '../styles/WinScreen.module.css'
 
 type WinScreenProps = {
   onNewGame: ()=> void,
   rightWord:string,
   guesses: string[],
-  user: User | null
+  user: User 
 }
 
 /*
@@ -33,11 +33,8 @@ type Stats = {
 
 
 
+
 export default function WinScreen({onNewGame, rightWord, user, guesses}:WinScreenProps){
-
-  const [stats, setStats] = useState<Stats | null>(null)
-
-  console.log(stats)
 
   let scoredPoints: number;
   if(guesses.length === 1){
@@ -60,32 +57,16 @@ export default function WinScreen({onNewGame, rightWord, user, guesses}:WinScree
     score: scoredPoints
   }
 
-  useEffect(()=>{
-    async function sendAndGetStats() {
-      if(!user){
-        return
-      }
-      try{
-        const res = await sendStats(object,user)
-        if(res){
-          setStats(res.stats)
-        }
-      } catch(err){
-        console.log(err)
-      } 
-    }
-    sendAndGetStats()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  const {stats, isLoading,error} = useSendAndGetStats(user,object)
 
  const letters = rightWord.split("")
 
   return(
-    <div className="screen">
+    <div className={styles.screen}>
       <h2>You guessed the word right</h2>
-      <ul className="word-list">{letters.map((letter,index) => <Letter key={index} letter={letter} />)}</ul>
+      <ul>{letters.map((letter,index) => <Letter key={index} letter={letter} />)}</ul>
       <button onClick={onNewGame}>New game</button>
-      <Stats stats={stats} />
+      {user && <Stats stats={stats} isLoading={isLoading} error={error} />}
     </div>
   )
 }
@@ -101,13 +82,21 @@ function Letter({letter}:LetterProps){
     )
 }
 
-type statsProps = {stats: Stats | null}
+type statsProps = {
+  stats: Stats | null,
+  isLoading: boolean,
+  error: string
 
-function Stats({stats}:statsProps){
+}
+
+function Stats({stats, isLoading, error}:statsProps){
 
   return(
     <div>
       <h2>Stats</h2>
+      {isLoading && <p>loading...</p>}
+      {error && <p>{error}</p>}
+      {stats && <>
       <p>total score: {stats?.totalScore}</p>
       <p>Games played: {stats?.gamesPlayed}</p>
       <p>wins: {stats?.wins}</p>
@@ -116,6 +105,7 @@ function Stats({stats}:statsProps){
       <p>average guesses: {stats?.avgGuesses !== undefined ? Math.round(stats?.avgGuesses) : "N/A"}</p>
       <p>fastest win: {stats?.fastestWin}</p>  
       <p>Last played: {stats?.lastPlayed}</p>
+      </>}
     </div>
   )
 }

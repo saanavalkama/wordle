@@ -1,4 +1,5 @@
 import axios from "axios"
+import type {User} from '../reducers/authReducer'
 
 type gameResult = {
     won: boolean,
@@ -6,11 +7,9 @@ type gameResult = {
     score: number
 }
 
-type User = {
-  token: string
-}
 
-export async function sendStats(gameResult : gameResult, user?: User){
+
+export async function sendStats(gameResult : gameResult, user: User){
   if(!user){
     return
   }

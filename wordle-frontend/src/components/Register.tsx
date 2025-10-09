@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { registerUser } from "../services/userRegister"
+import styles from '../styles/Register.module.css'
+import { Link } from "react-router-dom"
 
 export default function Register(){
 
@@ -61,35 +63,32 @@ export default function Register(){
   }
 
   return(
-  <div className="register">
+  <div className={styles.register}>
     <h2>Create your account</h2>
     {isLoading && <p>loading...</p>}
     {success && <p>{success}</p>}
     {error && 
-      <div className="register-error">
+      <div className={styles.error}>
         <p >{error}</p>
       </div>
     }
-    <form className="register-form"onSubmit={onFormSubmit}>
-      <div>
-        <label>Username</label>
+    <form className={styles.form} onSubmit={onFormSubmit}>
         <input
          value={username}
          onChange={(e)=> setUsername(e.target.value)}
+         placeholder="Username"
         />
-      </div>
-      <div className="password-div">
-        <label>Password</label>
         <input 
           type="password"
           value={password}
-          onChange={(e)=>setPassword(e.target.value)}  
+          onChange={(e)=>setPassword(e.target.value)}
+          placeholder="password"  
         />
-        <div className="password-feedback">
-            {password.length < 6 && (
-              <div>
-                <p>Password must be at least 6 characters long</p>
-              </div>
+       <div className={styles.feedback}>
+          {password.length < 6 && (
+            <div>
+              <p>Password must be at least 6 characters long</p>
+            </div>
             )}
             {!hasSpecialChar(password) && (
               <div>
@@ -102,16 +101,15 @@ export default function Register(){
               </div>
             )}
         </div>
-      </div>
-      <div>
-        <label>Re-type password</label>
         <input 
           type="password"
           value={passwordRe}
           onChange={(e)=>setPasswordRe(e.target.value)}
+          placeholder="re-type password"
         />
-      </div>
+
       <button>Submit</button>
+      <Link to="/login">Have account? Sign in</Link>
     </form>
   </div>)
 }

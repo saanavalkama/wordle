@@ -1,0 +1,73 @@
+.register{
+  height: 90vh;
+  padding: 3rem; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; 
+}
+
+.register h2{
+    font-weight: 400;
+}
+
+.error{
+    border: 1px solid red;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+
+.form button{
+    align-self: center;
+    background-color: var(--color-light);
+    color: white;
+    border-radius: 5px;
+    border: none; 
+    padding: 0.7rem; 
+}
+
+.form button:hover{
+    background-color: var(--color-blue);
+    opacity: 0.8
+}
+
+.form input{
+    padding: 1rem;
+    width: 15rem;
+    text-align: center;
+    border-radius: 5px;
+    background-color: var(--color-beage);
+    color: #121213
+}
+
+.form input::placeholder{
+    color:  #121213;
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+.register a:link,
+.register a:visited{
+    text-decoration: none;
+    width: 15rem;
+    text-align: center;
+    padding: 0.7rem;
+    color: white;
+    border-radius: 5px;
+    background-color: var(--color-light) ;
+
+}
+
+.register a:hover{
+    background-color: var(--color-blue);
+    opacity: 0.8;
+}
+

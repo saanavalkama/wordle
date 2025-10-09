@@ -1,21 +1,14 @@
 import { useEffect, useReducer, useState} from "react"
 import { initialGameState, gameReducer } from "./reducers/gameReducer"
 import { initialAuthState, authReducer } from "./reducers/authReducer"
+import { BrowserRouter,Routes, Route } from "react-router-dom"
 
-//components
-import InputField from './components/InputField'
-import StartScreen from "./components/StartScreen"
-import Game from "./components/Game"
-import ActiveGuess from "./components/ActiveGuess"
-import GuessedList from "./components/GuessedList"
-import EmptyGuess from "./components/EmptyGuess"
+//componens
+import Game from './Pages/Game'
 import Header from "./components/Header"
-import Feedback from "./components/Feeback"
-import WinScreen from "./components/WinScreen"
-import LostScreen from "./components/LossScreen"
 import LoginForm from "./components/Login"
 import Register from "./components/Register"
-
+import Stats from "./Pages/Stats"
 
 
 
@@ -27,17 +20,10 @@ export default function App(){
 
   const [gameState, dispatchGame] = useReducer(gameReducer, initialGameState)
   const [authState, dispatchAuth] = useReducer(authReducer, initialAuthState) 
-  const [screen, setScreen] = useState<Screen>('game')
   const [hydration, setHydration] = useState(false)
 
 
-  function showRegister(){
-    setScreen('register')
-  }
-
-  function showLogin(){
-    setScreen('login')
-  }
+  
 
   function onLogOut(){
     dispatchAuth({type:'LOGOUT'})
@@ -46,8 +32,8 @@ export default function App(){
 
 
   
-  const {rightWord, guess, status, guesses} = gameState
-  const {isLoggedIn, user, token} = authState
+  const {rightWord, guess, status, guesses, activeRow, lastGuessedRow} = gameState
+  const {isLoggedIn, user} = authState
   
 
  
@@ -85,8 +71,6 @@ export default function App(){
   }
   
 
-  const nEmptyFields = 5 - guesses.length
-
   if(!hydration){
     return <p>loading...</p>
   }
@@ -95,41 +79,38 @@ export default function App(){
 
   return(
     <div className="app">
+      <BrowserRouter>
       <Header 
-        onShowRegister={showRegister} 
-        onShowLogIn={showLogin}
         onLogOut={onLogOut}
         isLoggedIn={isLoggedIn}
         user={user}  
       />
-      {screen === 'register' && <Register />}
-      {screen === 'login' && <LoginForm dispatch={dispatchAuth} setScreen={setScreen}/>}
-      {screen === 'game' && isLoggedIn &&
-      <Game>
-        {status === 'idle' && guesses.length === 0 && !rightWord &&
-          <StartScreen 
-            dispatch={dispatchGame}  
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+            <Game
+              status={status}
+              guesses={guesses}
+              rightWord={rightWord}
+              onNewGame={onNewGame}
+              guess={guess}
+              dispatchGame={dispatchGame}
+              user={user}
+              activeRow={activeRow}
+              lastGuessedRow={lastGuessedRow}
             />}
-        {status === 'win' && 
-          <WinScreen 
-            onNewGame={onNewGame} 
-            rightWord={rightWord}
-            user={user}
-            guesses={guesses} 
-          />}
-        {status === 'lost' && <LostScreen onNewGame={onNewGame} rightWord={rightWord}/>}
-        {status === 'active' &&
-        <>
-          {guesses.map((guess,indx) => <GuessedList key={indx} rightWord={rightWord} word={guess}/>)}
-          <ActiveGuess guess={guess}/>
-          {[...Array(nEmptyFields)].map((_,i)=>(<EmptyGuess key={i} />))}
-          <InputField 
-            dispatch={dispatchGame} 
-            guess={guess} 
           />
-          <Feedback correctWord={rightWord} guesses={guesses}/>
-        </>}
-      </Game>}  
+          <Route 
+            path="/login" 
+            element={<LoginForm dispatch={dispatchAuth} />} 
+          />
+          <Route path="/register" element={<Register />} />
+          <Route path="/stats" element={<Stats />} />
+        </Routes>
+      </BrowserRouter>
+      
+        
     </div>
   )
 }

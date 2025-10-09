@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Action} from "../reducers/gameReducer";
 import { fetchWord } from "../services/fetchWord";
+import styles from '../styles/StartScreen.module.css'
 
 type StartScreenProps = {
   dispatch: React.Dispatch<Action>,
@@ -26,7 +27,7 @@ export default function StartScreen({dispatch}:StartScreenProps){
   }
 
   return(
-    <div className="screen">
+    <div className={styles.startScreen}>
       <h2>Start new game</h2>
       {isLoading &&
         <div className="screen">
